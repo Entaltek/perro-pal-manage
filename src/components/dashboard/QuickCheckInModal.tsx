@@ -17,8 +17,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { mockDogs, mockOwners } from '@/data/mockData';
-import { Dog, Plus, Check } from 'lucide-react';
+import { mockDogs, mockOwners, mockEmployees } from '@/data/mockData';
+import { Dog, Plus, Check, UserCheck } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface QuickCheckInModalProps {
@@ -29,22 +29,27 @@ export function QuickCheckInModal({ children }: QuickCheckInModalProps) {
   const [open, setOpen] = useState(false);
   const [selectedOwner, setSelectedOwner] = useState('');
   const [selectedDog, setSelectedDog] = useState('');
+  const [selectedCaretaker, setSelectedCaretaker] = useState('');
   const [serviceType, setServiceType] = useState<'daycare' | 'hotel'>('daycare');
   const [notes, setNotes] = useState('');
 
   const ownerDogs = mockDogs.filter((dog) => dog.ownerId === selectedOwner);
+  const caretakers = mockEmployees.filter((e) => e.role === 'caretaker' && e.status === 'active');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const dog = mockDogs.find((d) => d.id === selectedDog);
+    const caretaker = mockEmployees.find((e) => e.id === selectedCaretaker);
+    
     if (dog) {
       toast.success(`¡${dog.name} registrado exitosamente! 🐕`, {
-        description: `Servicio: ${serviceType === 'hotel' ? 'Hotel' : 'Guardería'}`,
+        description: `Servicio: ${serviceType === 'hotel' ? 'Hotel' : 'Guardería'}${caretaker ? ` • Cuidador: ${caretaker.firstName}` : ''}`,
       });
       setOpen(false);
       setSelectedOwner('');
       setSelectedDog('');
+      setSelectedCaretaker('');
       setNotes('');
     }
   };
@@ -142,6 +147,31 @@ export function QuickCheckInModal({ children }: QuickCheckInModalProps) {
                 <div className="text-sm text-muted-foreground">Con hospedaje</div>
               </button>
             </div>
+          </div>
+
+          {/* Caretaker Select */}
+          <div className="space-y-2">
+            <Label htmlFor="caretaker" className="flex items-center gap-2">
+              <UserCheck className="h-4 w-4" />
+              Cuidador Asignado
+            </Label>
+            <Select value={selectedCaretaker} onValueChange={setSelectedCaretaker}>
+              <SelectTrigger>
+                <SelectValue placeholder="Seleccionar cuidador..." />
+              </SelectTrigger>
+              <SelectContent>
+                {caretakers.map((caretaker) => (
+                  <SelectItem key={caretaker.id} value={caretaker.id}>
+                    <div className="flex items-center gap-2">
+                      <span>{caretaker.firstName} {caretaker.lastName}</span>
+                      <span className="text-muted-foreground text-xs">
+                        ({caretaker.assignedDogs.length} perritos)
+                      </span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Notes */}
