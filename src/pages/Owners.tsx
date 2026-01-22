@@ -1,19 +1,53 @@
 import { useState } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { OwnerCard } from '@/components/owners/OwnerCard';
+import { OwnerDetailModal } from '@/components/owners/OwnerDetailModal';
+import { NewOwnerModal } from '@/components/owners/NewOwnerModal';
+import { NewDogModal } from '@/components/dogs/NewDogModal';
+import { DogDetailModal } from '@/components/dogs/DogDetailModal';
 import { mockOwners, mockDogs } from '@/data/mockData';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search, Plus, Users } from 'lucide-react';
+import { usePagination } from '@/hooks/usePagination';
+import { PaginationControls } from '@/components/common/PaginationControls';
+import { Owner, Dog } from '@/types';
 
 export default function Owners() {
   const [search, setSearch] = useState('');
+  const [selectedOwner, setSelectedOwner] = useState<Owner | null>(null);
+  const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
+  const [ownerModalOpen, setOwnerModalOpen] = useState(false);
+  const [dogModalOpen, setDogModalOpen] = useState(false);
 
   const filteredOwners = mockOwners.filter((owner) => {
     const fullName = `${owner.firstName} ${owner.lastName}`.toLowerCase();
     return fullName.includes(search.toLowerCase()) ||
            owner.email.toLowerCase().includes(search.toLowerCase());
   });
+
+  const { currentItems, currentPage, totalPages, goToPage } = usePagination({
+    items: filteredOwners,
+    itemsPerPage: 6,
+  });
+
+  const handleOwnerClick = (owner: Owner) => {
+    setSelectedOwner(owner);
+    setOwnerModalOpen(true);
+  };
+
+  const handleDogClick = (dog: Dog) => {
+    setSelectedDog(dog);
+    setDogModalOpen(true);
+  };
+
+  const getOwnerDogs = (owner: Owner) => {
+    return mockDogs.filter((dog) => dog.ownerId === owner.id);
+  };
+
+  const getDogOwner = (dog: Dog) => {
+    return mockOwners.find((owner) => owner.id === dog.ownerId) || null;
+  };
 
   return (
     <MainLayout>
@@ -28,10 +62,12 @@ export default function Owners() {
               {mockOwners.length} familias registradas
             </p>
           </div>
-          <Button variant="gradient" className="gap-2">
-            <Plus className="h-4 w-4" />
-            Nuevo Padre/Madre
-          </Button>
+          <NewOwnerModal>
+            <Button variant="gradient" className="gap-2">
+              <Plus className="h-4 w-4" />
+              Nuevo Padre/Madre
+            </Button>
+          </NewOwnerModal>
         </div>
 
         {/* Search */}
@@ -47,18 +83,29 @@ export default function Owners() {
 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredOwners.map((owner, index) => {
-            const ownerDogs = mockDogs.filter((dog) => dog.ownerId === owner.id);
+          {currentItems.map((owner, index) => {
+            const ownerDogs = getOwnerDogs(owner);
             return (
               <div
                 key={owner.id}
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <OwnerCard owner={owner} dogs={ownerDogs} />
+                <OwnerCard
+                  owner={owner}
+                  dogs={ownerDogs}
+                  onClick={() => handleOwnerClick(owner)}
+                />
               </div>
             );
           })}
         </div>
+
+        {/* Pagination */}
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+        />
 
         {/* Empty State */}
         {filteredOwners.length === 0 && (
@@ -75,6 +122,26 @@ export default function Owners() {
           </div>
         )}
       </div>
+
+      {/* Owner Detail Modal */}
+      <OwnerDetailModal
+        owner={selectedOwner}
+        dogs={selectedOwner ? getOwnerDogs(selectedOwner) : []}
+        open={ownerModalOpen}
+        onOpenChange={setOwnerModalOpen}
+        onDogClick={handleDogClick}
+        onAddDog={() => {
+          // Could open NewDogModal with preselected owner
+        }}
+      />
+
+      {/* Dog Detail Modal */}
+      <DogDetailModal
+        dog={selectedDog}
+        owner={selectedDog ? getDogOwner(selectedDog) : null}
+        open={dogModalOpen}
+        onOpenChange={setDogModalOpen}
+      />
     </MainLayout>
   );
 }
