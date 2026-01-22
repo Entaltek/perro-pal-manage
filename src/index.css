@@ -2,95 +2,138 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Perromies Design System - Warm & Playful */
+
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Perromies Theme - Warm & Playful */
+    --background: 38 85% 95%;
+    --foreground: 20 16% 24%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 40 60% 97%;
+    --card-foreground: 20 16% 24%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 40 60% 97%;
+    --popover-foreground: 20 16% 24%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 35 85% 58%;
+    --primary-foreground: 20 16% 18%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 43 95% 64%;
+    --secondary-foreground: 20 16% 18%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 35 30% 88%;
+    --muted-foreground: 20 10% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 352 100% 59%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --success: 100 55% 55%;
+    --success-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --warning: 43 95% 64%;
+    --warning-foreground: 20 16% 18%;
 
-    --radius: 0.5rem;
+    --destructive: 352 100% 59%;
+    --destructive-foreground: 0 0% 100%;
 
-    --sidebar-background: 0 0% 98%;
+    --border: 35 40% 82%;
+    --input: 35 40% 85%;
+    --ring: 35 85% 58%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --radius: 1rem;
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Custom Perromies Colors */
+    --ocher: 35 85% 58%;
+    --chocolate: 20 16% 24%;
+    --vibrant-red: 352 100% 59%;
+    --sun-yellow: 43 95% 64%;
+    --grass-green: 100 55% 55%;
+    --cream: 38 85% 95%;
 
-    --sidebar-primary-foreground: 0 0% 98%;
+    /* Gradients */
+    --gradient-warm: linear-gradient(135deg, hsl(35 85% 58%) 0%, hsl(43 95% 64%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(352 100% 59%) 0%, hsl(35 85% 58%) 100%);
+    --gradient-nature: linear-gradient(135deg, hsl(100 55% 55%) 0%, hsl(43 95% 64%) 100%);
 
-    --sidebar-accent: 240 4.8% 95.9%;
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(35 85% 58% / 0.25);
+    --shadow-card: 0 8px 30px -8px hsl(20 16% 24% / 0.12);
+    --shadow-hover: 0 12px 40px -8px hsl(35 85% 58% / 0.35);
 
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 38 85% 95%;
+    --sidebar-foreground: 20 16% 24%;
+    --sidebar-primary: 35 85% 58%;
+    --sidebar-primary-foreground: 20 16% 18%;
+    --sidebar-accent: 43 95% 64%;
+    --sidebar-accent-foreground: 20 16% 18%;
+    --sidebar-border: 35 40% 82%;
+    --sidebar-ring: 35 85% 58%;
   }
 
-  .dark {
-    --background: 222.2 84% 4.9%;
+  .dark,
+  .theme-corporate {
+    /* Corporate/Entaltek Theme */
+    --background: 210 60% 12%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 210 55% 16%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 210 55% 16%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 199 98% 35%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 176 70% 57%;
+    --secondary-foreground: 210 60% 12%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 210 40% 22%;
+    --muted-foreground: 210 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 176 70% 57%;
+    --accent-foreground: 210 60% 12%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --success: 176 70% 57%;
+    --success-foreground: 210 60% 12%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --warning: 43 95% 64%;
+    --warning-foreground: 210 60% 12%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 40% 25%;
+    --input: 210 40% 25%;
+    --ring: 199 98% 35%;
+
+    /* Corporate Colors */
+    --ocher: 199 98% 35%;
+    --chocolate: 210 40% 98%;
+    --vibrant-red: 0 62% 50%;
+    --sun-yellow: 176 70% 57%;
+    --grass-green: 176 70% 57%;
+    --cream: 210 60% 12%;
+
+    --gradient-warm: linear-gradient(135deg, hsl(199 98% 35%) 0%, hsl(176 70% 57%) 100%);
+    --gradient-sunset: linear-gradient(135deg, hsl(199 98% 35%) 0%, hsl(210 55% 20%) 100%);
+    --gradient-nature: linear-gradient(135deg, hsl(176 70% 57%) 0%, hsl(199 98% 35%) 100%);
+
+    --shadow-soft: 0 4px 20px -4px hsl(199 98% 35% / 0.3);
+    --shadow-card: 0 8px 30px -8px hsl(0 0% 0% / 0.4);
+    --shadow-hover: 0 12px 40px -8px hsl(199 98% 35% / 0.4);
+
+    --sidebar-background: 210 55% 14%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 199 98% 35%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 176 70% 57%;
+    --sidebar-accent-foreground: 210 60% 12%;
+    --sidebar-border: 210 40% 25%;
+    --sidebar-ring: 199 98% 35%;
   }
 }
 
@@ -100,6 +143,84 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-body antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-bold;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-card/80 backdrop-blur-md border border-border/50 rounded-2xl;
+    box-shadow: var(--shadow-card);
+  }
+
+  .gradient-warm {
+    background: var(--gradient-warm);
+  }
+
+  .gradient-sunset {
+    background: var(--gradient-sunset);
+  }
+
+  .gradient-nature {
+    background: var(--gradient-nature);
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  .paw-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.03'%3E%3Cpath d='M30 30c-2.5 0-4.5 2-4.5 4.5s2 4.5 4.5 4.5 4.5-2 4.5-4.5-2-4.5-4.5-4.5zm-8-8c-1.5 0-2.5 1-2.5 2.5s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-2.5-2.5-2.5zm16 0c-1.5 0-2.5 1-2.5 2.5s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-2.5-2.5-2.5zm-12 4c-1.5 0-2.5 1-2.5 2.5s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-2.5-2.5-2.5zm8 0c-1.5 0-2.5 1-2.5 2.5s1 2.5 2.5 2.5 2.5-1 2.5-2.5-1-2.5-2.5-2.5z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+
+@layer utilities {
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+
+  .animate-wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out forwards;
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
   }
 }
