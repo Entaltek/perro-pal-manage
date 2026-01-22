@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
-import { mockCheckIns, mockDogs } from '@/data/mockData';
+import { mockCheckIns, mockDogs, mockOwners } from '@/data/mockData';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { QuickCheckInModal } from '@/components/dashboard/QuickCheckInModal';
+import { DogDetailModal } from '@/components/dogs/DogDetailModal';
 import {
   Table,
   TableBody,
@@ -15,12 +17,35 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { Plus, LogOut, Clock, CalendarCheck } from 'lucide-react';
 import { toast } from 'sonner';
+import { usePagination } from '@/hooks/usePagination';
+import { PaginationControls } from '@/components/common/PaginationControls';
+import { Dog } from '@/types';
 
 export default function Attendance() {
+  const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
+  const [dogModalOpen, setDogModalOpen] = useState(false);
+
+  const { currentItems, currentPage, totalPages, goToPage } = usePagination({
+    items: mockCheckIns,
+    itemsPerPage: 10,
+  });
+
   const handleCheckOut = (dogName: string) => {
     toast.success(`¡${dogName} ha salido! 👋`, {
       description: 'Check-out registrado exitosamente',
     });
+  };
+
+  const handleRowClick = (dogId: string) => {
+    const dog = mockDogs.find((d) => d.id === dogId);
+    if (dog) {
+      setSelectedDog(dog);
+      setDogModalOpen(true);
+    }
+  };
+
+  const getDogOwner = (dog: Dog) => {
+    return mockOwners.find((owner) => owner.id === dog.ownerId) || null;
   };
 
   return (
@@ -86,10 +111,14 @@ export default function Attendance() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {mockCheckIns.map((checkIn) => {
+              {currentItems.map((checkIn) => {
                 const dog = mockDogs.find((d) => d.id === checkIn.dogId);
                 return (
-                  <TableRow key={checkIn.id} className="animate-fade-in">
+                  <TableRow
+                    key={checkIn.id}
+                    className="animate-fade-in cursor-pointer hover:bg-muted/50"
+                    onClick={() => handleRowClick(checkIn.dogId)}
+                  >
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-xl overflow-hidden bg-muted flex-shrink-0">
@@ -140,7 +169,10 @@ export default function Attendance() {
                         variant="outline"
                         size="sm"
                         className="gap-1"
-                        onClick={() => handleCheckOut(checkIn.dogName)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCheckOut(checkIn.dogName);
+                        }}
                       >
                         <LogOut className="h-3 w-3" />
                         Salida
@@ -152,7 +184,22 @@ export default function Attendance() {
             </TableBody>
           </Table>
         </div>
+
+        {/* Pagination */}
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+        />
       </div>
+
+      {/* Dog Detail Modal */}
+      <DogDetailModal
+        dog={selectedDog}
+        owner={selectedDog ? getDogOwner(selectedDog) : null}
+        open={dogModalOpen}
+        onOpenChange={setDogModalOpen}
+      />
     </MainLayout>
   );
 }

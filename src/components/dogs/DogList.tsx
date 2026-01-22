@@ -11,6 +11,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Search, Filter, Plus, Dog as DogIcon } from 'lucide-react';
+import { usePagination } from '@/hooks/usePagination';
+import { PaginationControls } from '@/components/common/PaginationControls';
+import { NewDogModal } from './NewDogModal';
+import { mockOwners } from '@/data/mockData';
 
 interface DogListProps {
   dogs: Dog[];
@@ -30,6 +34,11 @@ export function DogList({ dogs, onDogClick }: DogListProps) {
     return matchesSearch && matchesStatus;
   });
 
+  const { currentItems, currentPage, totalPages, goToPage } = usePagination({
+    items: filteredDogs,
+    itemsPerPage: 6,
+  });
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -42,10 +51,12 @@ export function DogList({ dogs, onDogClick }: DogListProps) {
             {dogs.length} registrados • {dogs.filter((d) => d.status === 'checked-in').length} en guardería
           </p>
         </div>
-        <Button variant="gradient" className="gap-2">
-          <Plus className="h-4 w-4" />
-          Nuevo Perrihijo
-        </Button>
+        <NewDogModal owners={mockOwners}>
+          <Button variant="gradient" className="gap-2">
+            <Plus className="h-4 w-4" />
+            Nuevo Perrihijo
+          </Button>
+        </NewDogModal>
       </div>
 
       {/* Filters */}
@@ -75,7 +86,7 @@ export function DogList({ dogs, onDogClick }: DogListProps) {
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredDogs.map((dog, index) => (
+        {currentItems.map((dog, index) => (
           <div
             key={dog.id}
             style={{ animationDelay: `${index * 50}ms` }}
@@ -84,6 +95,13 @@ export function DogList({ dogs, onDogClick }: DogListProps) {
           </div>
         ))}
       </div>
+
+      {/* Pagination */}
+      <PaginationControls
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={goToPage}
+      />
 
       {/* Empty State */}
       {filteredDogs.length === 0 && (

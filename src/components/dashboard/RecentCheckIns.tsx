@@ -1,15 +1,21 @@
 import { CheckIn } from '@/types';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Clock, Dog } from 'lucide-react';
+import { Clock, Dog, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { Link } from 'react-router-dom';
 
 interface RecentCheckInsProps {
   checkIns: CheckIn[];
+  maxDisplay?: number;
 }
 
-export function RecentCheckIns({ checkIns }: RecentCheckInsProps) {
+export function RecentCheckIns({ checkIns, maxDisplay = 10 }: RecentCheckInsProps) {
+  const displayedCheckIns = checkIns.slice(0, maxDisplay);
+  const hasMore = checkIns.length > maxDisplay;
+
   return (
     <div className="glass-card p-6 animate-slide-up">
       <div className="flex items-center justify-between mb-6">
@@ -23,7 +29,7 @@ export function RecentCheckIns({ checkIns }: RecentCheckInsProps) {
       </div>
 
       <div className="space-y-3">
-        {checkIns.map((checkIn, index) => (
+        {displayedCheckIns.map((checkIn, index) => (
           <div
             key={checkIn.id}
             className={cn(
@@ -67,6 +73,18 @@ export function RecentCheckIns({ checkIns }: RecentCheckInsProps) {
           </div>
         )}
       </div>
+
+      {/* Show "Go to Attendance" when more than maxDisplay */}
+      {hasMore && (
+        <div className="mt-4 pt-4 border-t border-border">
+          <Link to="/attendance">
+            <Button variant="outline" className="w-full gap-2">
+              Ir a Asistencia
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
