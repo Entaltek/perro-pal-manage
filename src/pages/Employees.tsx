@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { EmployeeCard } from '@/components/employees/EmployeeCard';
-import { EmployeeDetailModal } from '@/components/employees/EmployeeDetailModal';
 import { NewEmployeeModal } from '@/components/employees/NewEmployeeModal';
 import { mockEmployees } from '@/data/mockData';
 import { Button } from '@/components/ui/button';
@@ -19,8 +19,7 @@ import { PaginationControls } from '@/components/common/PaginationControls';
 import { Employee } from '@/types';
 
 export default function Employees() {
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
-  const [detailModalOpen, setDetailModalOpen] = useState(false);
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<string>('all');
 
@@ -40,8 +39,7 @@ export default function Employees() {
   });
 
   const handleEmployeeClick = (employee: Employee) => {
-    setSelectedEmployee(employee);
-    setDetailModalOpen(true);
+    navigate(`/employees/${employee.id}`);
   };
 
   const caretakers = mockEmployees.filter((e) => e.role === 'caretaker');
@@ -145,13 +143,6 @@ export default function Employees() {
           onPageChange={goToPage}
         />
       </div>
-
-      {/* Employee Detail Modal */}
-      <EmployeeDetailModal
-        employee={selectedEmployee}
-        open={detailModalOpen}
-        onOpenChange={setDetailModalOpen}
-      />
     </MainLayout>
   );
 }
