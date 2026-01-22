@@ -43,6 +43,19 @@ export interface Owner {
   createdAt: Date;
 }
 
+export interface Employee {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  role: 'caretaker' | 'admin' | 'groomer' | 'trainer';
+  photo?: string;
+  hireDate: Date;
+  status: 'active' | 'inactive';
+  assignedDogs: string[];
+}
+
 export interface CheckIn {
   id: string;
   dogId: string;
@@ -54,6 +67,8 @@ export interface CheckIn {
   expectedCheckOut?: Date;
   notes?: string;
   status: 'active' | 'completed';
+  caretakerId?: string;
+  caretakerName?: string;
 }
 
 export interface Service {

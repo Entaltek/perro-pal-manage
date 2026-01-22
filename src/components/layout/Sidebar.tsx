@@ -14,12 +14,14 @@ import {
   ClipboardList,
   Menu,
   X,
+  UserCheck,
 } from 'lucide-react';
 
 const navItems = [
   { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
   { icon: Dog, label: 'Perrihijos', path: '/dogs' },
   { icon: Users, label: 'Padres', path: '/owners' },
+  { icon: UserCheck, label: 'Cuidadores', path: '/employees' },
   { icon: CalendarCheck, label: 'Asistencia', path: '/attendance' },
   { icon: ClipboardList, label: 'Servicios', path: '/services' },
   { icon: Settings, label: 'Configuración', path: '/settings' },

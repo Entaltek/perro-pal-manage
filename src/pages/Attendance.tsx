@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
-import { mockCheckIns, mockDogs, mockOwners } from '@/data/mockData';
+import { mockCheckIns, mockDogs, mockOwners, mockAttendanceHistory, mockEmployees } from '@/data/mockData';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { QuickCheckInModal } from '@/components/dashboard/QuickCheckInModal';
@@ -13,20 +13,40 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { Plus, LogOut, Clock, CalendarCheck } from 'lucide-react';
+import { Plus, LogOut, Clock, CalendarCheck, UserCheck, History } from 'lucide-react';
 import { toast } from 'sonner';
 import { usePagination } from '@/hooks/usePagination';
 import { PaginationControls } from '@/components/common/PaginationControls';
-import { Dog } from '@/types';
+import { Dog, CheckIn } from '@/types';
 
 export default function Attendance() {
   const [selectedDog, setSelectedDog] = useState<Dog | null>(null);
   const [dogModalOpen, setDogModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('active');
 
-  const { currentItems, currentPage, totalPages, goToPage } = usePagination({
-    items: mockCheckIns,
+  const activeCheckIns = mockCheckIns.filter((c) => c.status === 'active');
+  const historyCheckIns = mockAttendanceHistory;
+
+  const {
+    currentItems: currentActiveItems,
+    currentPage: activeCurrentPage,
+    totalPages: activeTotalPages,
+    goToPage: goToActivePage,
+  } = usePagination({
+    items: activeCheckIns,
+    itemsPerPage: 10,
+  });
+
+  const {
+    currentItems: currentHistoryItems,
+    currentPage: historyCurrentPage,
+    totalPages: historyTotalPages,
+    goToPage: goToHistoryPage,
+  } = usePagination({
+    items: historyCheckIns,
     itemsPerPage: 10,
   });
 
@@ -46,6 +66,96 @@ export default function Attendance() {
 
   const getDogOwner = (dog: Dog) => {
     return mockOwners.find((owner) => owner.id === dog.ownerId) || null;
+  };
+
+  const renderCheckInRow = (checkIn: CheckIn, showCheckOut = true) => {
+    const dog = mockDogs.find((d) => d.id === checkIn.dogId);
+    return (
+      <TableRow
+        key={checkIn.id}
+        className="animate-fade-in cursor-pointer hover:bg-muted/50"
+        onClick={() => handleRowClick(checkIn.dogId)}
+      >
+        <TableCell>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-muted flex-shrink-0">
+              {dog?.photo ? (
+                <img
+                  src={dog.photo}
+                  alt={checkIn.dogName}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full gradient-warm flex items-center justify-center text-sm font-bold text-primary-foreground">
+                  {checkIn.dogName.charAt(0)}
+                </div>
+              )}
+            </div>
+            <div>
+              <div className="font-semibold">{checkIn.dogName}</div>
+              <div className="text-xs text-muted-foreground">
+                {dog?.breed}
+              </div>
+            </div>
+          </div>
+        </TableCell>
+        <TableCell>{checkIn.ownerName}</TableCell>
+        <TableCell>
+          {checkIn.caretakerName ? (
+            <div className="flex items-center gap-1 text-sm">
+              <UserCheck className="h-3 w-3 text-primary" />
+              <span>{checkIn.caretakerName}</span>
+            </div>
+          ) : (
+            <span className="text-muted-foreground text-sm">Sin asignar</span>
+          )}
+        </TableCell>
+        <TableCell>
+          <Badge
+            variant={checkIn.serviceType === 'hotel' ? 'default' : 'secondary'}
+          >
+            {checkIn.serviceType === 'hotel' ? '🏨 Hotel' : '☀️ Guardería'}
+          </Badge>
+        </TableCell>
+        <TableCell>
+          <div className="flex items-center gap-1 text-sm">
+            <Clock className="h-3 w-3" />
+            {format(new Date(checkIn.checkInTime), 'dd/MM HH:mm')}
+          </div>
+        </TableCell>
+        <TableCell>
+          {checkIn.checkOutTime ? (
+            <div className="flex items-center gap-1 text-sm text-success">
+              <CalendarCheck className="h-3 w-3" />
+              {format(new Date(checkIn.checkOutTime), 'dd/MM HH:mm')}
+            </div>
+          ) : checkIn.expectedCheckOut ? (
+            <div className="flex items-center gap-1 text-sm">
+              <CalendarCheck className="h-3 w-3" />
+              {format(new Date(checkIn.expectedCheckOut), 'HH:mm')}
+            </div>
+          ) : (
+            <span className="text-muted-foreground text-sm">-</span>
+          )}
+        </TableCell>
+        {showCheckOut && (
+          <TableCell className="text-right">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleCheckOut(checkIn.dogName);
+              }}
+            >
+              <LogOut className="h-3 w-3" />
+              Salida
+            </Button>
+          </TableCell>
+        )}
+      </TableRow>
+    );
   };
 
   return (
@@ -97,100 +207,76 @@ export default function Attendance() {
           </div>
         </div>
 
-        {/* Table */}
-        <div className="glass-card overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Perrihijo</TableHead>
-                <TableHead>Dueño</TableHead>
-                <TableHead>Servicio</TableHead>
-                <TableHead>Entrada</TableHead>
-                <TableHead>Salida Est.</TableHead>
-                <TableHead className="text-right">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentItems.map((checkIn) => {
-                const dog = mockDogs.find((d) => d.id === checkIn.dogId);
-                return (
-                  <TableRow
-                    key={checkIn.id}
-                    className="animate-fade-in cursor-pointer hover:bg-muted/50"
-                    onClick={() => handleRowClick(checkIn.dogId)}
-                  >
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl overflow-hidden bg-muted flex-shrink-0">
-                          {dog?.photo ? (
-                            <img
-                              src={dog.photo}
-                              alt={checkIn.dogName}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full gradient-warm flex items-center justify-center text-sm font-bold text-primary-foreground">
-                              {checkIn.dogName.charAt(0)}
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <div className="font-semibold">{checkIn.dogName}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {dog?.breed}
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{checkIn.ownerName}</TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={checkIn.serviceType === 'hotel' ? 'default' : 'secondary'}
-                      >
-                        {checkIn.serviceType === 'hotel' ? '🏨 Hotel' : '☀️ Guardería'}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-sm">
-                        <Clock className="h-3 w-3" />
-                        {format(new Date(checkIn.checkInTime), 'HH:mm')}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {checkIn.expectedCheckOut && (
-                        <div className="flex items-center gap-1 text-sm">
-                          <CalendarCheck className="h-3 w-3" />
-                          {format(new Date(checkIn.expectedCheckOut), 'HH:mm')}
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="gap-1"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleCheckOut(checkIn.dogName);
-                        }}
-                      >
-                        <LogOut className="h-3 w-3" />
-                        Salida
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </div>
+        {/* Tabs for Active vs History */}
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="active" className="gap-2">
+              <CalendarCheck className="h-4 w-4" />
+              Activos ({activeCheckIns.length})
+            </TabsTrigger>
+            <TabsTrigger value="history" className="gap-2">
+              <History className="h-4 w-4" />
+              Historial
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Pagination */}
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={goToPage}
-        />
+          <TabsContent value="active" className="mt-4">
+            <div className="glass-card overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Perrihijo</TableHead>
+                    <TableHead>Dueño</TableHead>
+                    <TableHead>Cuidador</TableHead>
+                    <TableHead>Servicio</TableHead>
+                    <TableHead>Entrada</TableHead>
+                    <TableHead>Salida Est.</TableHead>
+                    <TableHead className="text-right">Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentActiveItems.map((checkIn) => renderCheckInRow(checkIn, true))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <div className="mt-4">
+              <PaginationControls
+                currentPage={activeCurrentPage}
+                totalPages={activeTotalPages}
+                onPageChange={goToActivePage}
+              />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="history" className="mt-4">
+            <div className="glass-card overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Perrihijo</TableHead>
+                    <TableHead>Dueño</TableHead>
+                    <TableHead>Cuidador</TableHead>
+                    <TableHead>Servicio</TableHead>
+                    <TableHead>Entrada</TableHead>
+                    <TableHead>Salida</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentHistoryItems.map((checkIn) => renderCheckInRow(checkIn, false))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <div className="mt-4">
+              <PaginationControls
+                currentPage={historyCurrentPage}
+                totalPages={historyTotalPages}
+                onPageChange={goToHistoryPage}
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
       {/* Dog Detail Modal */}
