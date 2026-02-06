@@ -25,7 +25,7 @@ export default function Dashboard() {
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div>
             <h1 className="text-3xl font-display font-bold text-foreground">
-              ¡Bienvenido a Perromies! 🐕
+              ¡Bienvenido a Entaltek Sabueso!
             </h1>
             <p className="text-muted-foreground mt-1">
               Panel de control de tu guardería canina
