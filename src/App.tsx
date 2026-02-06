@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import SplashScreen from "./pages/SplashScreen";
 import Dogs from "./pages/Dogs";
 import Owners from "./pages/Owners";
 import Employees from "./pages/Employees";
@@ -23,6 +24,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/splash" element={<SplashScreen />} />
           <Route path="/dogs" element={<Dogs />} />
           <Route path="/owners" element={<Owners />} />
           <Route path="/employees" element={<Employees />} />
