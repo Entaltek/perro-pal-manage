@@ -67,7 +67,7 @@ export function Sidebar() {
           </div>
           {!collapsed && (
             <div className="animate-fade-in">
-              <h1 className="font-display text-xl font-bold text-foreground">Perromies</h1>
+              <h1 className="font-display text-xl font-bold text-foreground">Entaltek</h1>
               <p className="text-xs text-muted-foreground">Guardería Canina</p>
             </div>
           )}
