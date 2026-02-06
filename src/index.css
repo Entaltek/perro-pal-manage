@@ -6,6 +6,28 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap');
 
+/* Sansation font for corporate theme */
+@font-face {
+  font-family: 'Sansation';
+  src: url('https://fonts.cdnfonts.com/s/14505/Sansation_Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sansation';
+  src: url('https://fonts.cdnfonts.com/s/14505/Sansation_Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sansation';
+  src: url('https://fonts.cdnfonts.com/s/14505/Sansation_Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
 @layer base {
   :root {
     /* Perromies Theme - Warm & Playful */
