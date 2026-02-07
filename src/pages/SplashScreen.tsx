@@ -72,11 +72,11 @@ export default function SplashScreen() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
         >
-          <h1 className="text-5xl md:text-7xl font-corporate font-bold text-white mb-2 tracking-wide">
-            Entaltek
+          <h1 className="text-5xl md:text-7xl font-corporate font-bold text-white mb-2 tracking-wider">
+            ENTALTEK
           </h1>
-          <h2 className="text-3xl md:text-5xl font-corporate font-bold bg-gradient-to-r from-[hsl(199,98%,35%)] to-[hsl(176,70%,57%)] bg-clip-text text-transparent tracking-wide">
-            Sabueso
+          <h2 className="text-3xl md:text-5xl font-corporate font-bold bg-gradient-to-r from-[hsl(199,98%,35%)] to-[hsl(176,70%,57%)] bg-clip-text text-transparent tracking-wider">
+            SABUESO
           </h2>
         </motion.div>
 
