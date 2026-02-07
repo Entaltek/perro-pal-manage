@@ -9,21 +9,35 @@
 /* Sansation font for corporate theme */
 @font-face {
   font-family: 'Sansation';
-  src: url('https://fonts.cdnfonts.com/s/14505/Sansation_Light.woff') format('woff');
+  src: url('/fonts/Sansation_Light.ttf') format('truetype');
   font-weight: 300;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Sansation';
-  src: url('https://fonts.cdnfonts.com/s/14505/Sansation_Regular.woff') format('woff');
+  src: url('/fonts/Sansation_Light_Italic.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Sansation';
+  src: url('/fonts/Sansation_Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Sansation';
-  src: url('https://fonts.cdnfonts.com/s/14505/Sansation_Bold.woff') format('woff');
+  src: url('/fonts/Sansation_Italic.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Sansation';
+  src: url('/fonts/Sansation_Bold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
 }
